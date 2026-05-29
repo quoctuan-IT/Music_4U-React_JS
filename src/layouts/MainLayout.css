@@ -1,0 +1,37 @@
+:root {
+    --bs-primary: #ff2c92d9;
+    --bs-body-bg: #000000;
+    --bs-body-color: #f8f9fa;
+    --accent-pink: #fa70be;
+}
+
+body {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+}
+
+.text-pink {
+    color: var(--accent-pink) !important;
+}
+
+.btn-pink {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+}
+
+.btn-pink:hover {
+    background-color: var(--accent-pink);
+    border-color: var(--accent-pink);
+    color: black;
+}
+
+.btn-outline-pink {
+    color: var(--accent-pink);
+    border-color: var(--accent-pink);
+}
+
+.btn-outline-pink:hover {
+    background-color: var(--accent-pink);
+    color: black;
+}

@@ -1,0 +1,11 @@
+:root {
+    --bs-primary: #ff2c92d9;
+    --bs-body-bg: #000000;
+    --bs-body-color: #f8f9fa;
+    --accent-pink: #fa70be;
+}
+
+body {
+    background-color: var(--bs-body-bg);
+    color: var(--bs-body-color);
+}
