@@ -1,0 +1,41 @@
+.shadow-pink-glow {
+    box-shadow: 0 10px 40px rgba(255, 45, 85, 0.2) !important;
+}
+
+.dashboard-card {
+    text-decoration: none;
+    display: block;
+}
+
+.dashboard-card .card {
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dashboard-card:hover .card {
+    transform: translateY(-10px);
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-color: var(--accent-pink) !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.icon-box {
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover .icon-box {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.ls-1 {
+    letter-spacing: 1px;
+}
+
+@media (max-width: 767px) {
+    .border-end {
+        border-end: none !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        padding-bottom: 20px;
+        margin-bottom: 10px;
+    }
+}

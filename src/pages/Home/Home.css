@@ -1,0 +1,29 @@
+.header-line {
+    width: 60px;
+    height: 4px;
+    background: var(--accent-pink);
+    border-radius: 2px;
+}
+
+.card-hover-effect {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.card-hover-effect:hover {
+    transform: translateY(-8px);
+    z-index: 10;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+@media (max-width: 768px) {
+    .display-3 {
+        font-size: 2.5rem;
+    }
+
+    .row-cols-2 {
+        padding: 0 5px;
+    }
+}

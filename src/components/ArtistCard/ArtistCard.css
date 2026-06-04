@@ -1,0 +1,42 @@
+.artist-img-wrapper:hover {
+    border-color: var(--accent-pink) !important;
+    box-shadow: 0 0 20px rgba(255, 45, 85, 0.3) !important;
+}
+
+.artist-img {
+    transition: transform 0.5s ease;
+}
+
+.artist-card:hover .artist-img {
+    transform: scale(1.1);
+    filter: brightness(0.6);
+}
+
+.artist-overlay {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: rgba(255, 45, 85, 0.2);
+}
+
+.artist-card:hover .artist-overlay {
+    opacity: 1;
+}
+
+.hover-pink:hover {
+    color: var(--accent-pink) !important;
+}
+
+.transition-base {
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 576px) {
+    .artist-img-wrapper {
+        width: 140px !important;
+        height: 140px !important;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+}

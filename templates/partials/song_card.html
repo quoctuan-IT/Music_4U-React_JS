@@ -1,0 +1,104 @@
+{% load static %}
+
+<div class="col">
+    <div class="card h-100 bg-transparent border-0 song-card">
+        <div class="position-relative overflow-hidden rounded-4 shadow-lg group">
+            <a href="{% url 'song_detail' song.id %}">
+                {% if song.cover_image %}
+                <img alt="{{ song.title }}" class="card-img-top song-img" src="{{ song.cover_image.url }}">
+                {% else %}
+                <img alt="Default cover" class="card-img-top song-img" src="{% static 'images/logo-IT.png' %}">
+                {% endif %}
+            </a>
+
+            <div class="play-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                <a class="btn btn-pink rounded-circle shadow-lg btn-play-main" href="{% url 'song_detail' song.id %}">
+                    <i class="bi bi-play-fill fs-3"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="card-body px-1 pt-3 pb-0">
+            <h6 class="card-title text-truncate fw-bold mb-1" title="{{ song.title }}">
+                <a href="{% url 'song_detail' song.id %}" class="text-white text-decoration-none hover-pink">{{ song.title }}</a>
+            </h6>
+            <p class="mb-2">
+                <a class="text-secondary small text-decoration-none hover-pink" href="{% url 'artist_detail' song.artist.id %}">
+                    <i class="bi bi-person me-1"></i>{{ song.artist }}
+                </a>
+            </p>
+        </div>
+
+        <div class="card-footer bg-transparent border-0 px-1 pt-0 pb-2 mt-auto">
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="{% url 'song_detail' song.id %}" class="btn btn-sm btn-dark rounded-pill px-3 border-secondary">
+                    <i class="bi bi-headphones me-1"></i> Play
+                </a>
+                
+                {% if user.is_authenticated %}
+                <button class="btn btn-sm btn-favorite rounded-circle border-0" 
+                        data-song-id="{{ song.id }}" 
+                        style="width: 32px; height: 32px; background: rgba(255,255,255,0.05);">
+                    {% if song in user.favorite_songs.all %}
+                    <i class="bi bi-heart-fill text-danger"></i>
+                    {% else %}
+                    <i class="bi bi-heart text-pink"></i>
+                    {% endif %}
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .song-img {
+        height: 220px;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .song-card:hover .song-img {
+        transform: scale(1.1);
+        filter: brightness(0.4);
+    }
+
+    .play-overlay {
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        background: rgba(0,0,0,0.2);
+    }
+
+    .song-card:hover .play-overlay {
+        opacity: 1;
+    }
+
+    .btn-play-main {
+        width: 55px;
+        height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+
+    .song-card:hover .btn-play-main {
+        transform: translateY(0);
+    }
+
+    .hover-pink:hover {
+        color: var(--accent-pink) !important;
+    }
+
+    .btn-favorite:hover {
+        background: rgba(255, 45, 85, 0.2) !important;
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 576px) {
+        .song-img { height: 160px; }
+        .btn-play-main { width: 45px; height: 45px; }
+        .card-title { font-size: 0.9rem; }
+    }
+</style>

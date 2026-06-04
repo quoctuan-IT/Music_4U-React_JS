@@ -1,0 +1,18 @@
+.custom-focus:focus {
+    border-color: var(--accent-pink) !important;
+    background-color: #111 !important;
+    box-shadow: 0 0 8px rgba(255, 133, 162, 0.3) !important;
+    color: white !important;
+}
+
+.form-select option {
+    background-color: #000;
+    color: white;
+}
+
+@media (max-width: 767.98px) {
+    .btn-pink {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+}
