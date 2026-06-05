@@ -1,0 +1,54 @@
+.rotate-anim {
+    animation: rotate 10s linear infinite;
+    animation-play-state: paused;
+    transition: border 0.3s ease;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.disc-hole {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    background: #000000;
+    border-radius: 50%;
+    z-index: 10;
+    border: 2px solid rgb(255, 255, 255);
+}
+
+.play-btn {
+    width: 60px;
+    height: 60px;
+    transition: transform 0.2s;
+}
+
+.play-btn:active {
+    transform: scale(0.9);
+}
+
+.hover-white:hover {
+    color: white !important;
+}
+
+.custom-range::-webkit-slider-runnable-track {
+    background: rgba(255, 255, 255, 0.3);
+    height: 6px;
+    border-radius: 3px;
+}
+
+.custom-range::-webkit-slider-thumb {
+    background: var(--accent-pink);
+    margin-top: -4px;
+    box-shadow: 0 0 10px var(--accent-pink);
+}

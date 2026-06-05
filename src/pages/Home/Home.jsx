@@ -26,13 +26,14 @@ function Home() {
   const [artists, setArtists] = useState([]);
 
   useEffect(() => {
-    const fetchSongs = async () => {
+    const fetchHome = async () => {
       const start = Date.now();
 
       try {
-        const response = await api.get("/songs/");
+        const response = await api.get("/");
 
-        setSongs(response.data.results);
+        setSongs(response.data.songs);
+        setArtists(response.data.artists);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -45,28 +46,7 @@ function Home() {
       }
     };
 
-    fetchSongs();
-
-    const fetchArtists = async () => {
-      const start = Date.now();
-
-      try {
-        const response = await api.get("/artists/");
-
-        setArtists(response.data.results);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        const elapsed = Date.now() - start;
-        const remaining = Math.max(0, 2000 - elapsed);
-
-        setTimeout(() => {
-          setLoading(false);
-        }, remaining);
-      }
-    };
-
-    fetchArtists();
+    fetchHome();
   }, []);
 
   if (loading) {
@@ -106,8 +86,8 @@ function Home() {
 
             <div className="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
               {songs.map((song) => (
-                <div className="col card-hover-effect">
-                  <SongCard key={song.id} song={song} />
+                <div key={song.id} className="col card-hover-effect">
+                  <SongCard song={song} />
                 </div>
               ))}
             </div>
@@ -135,8 +115,8 @@ function Home() {
 
             <div className="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-4">
               {artists.map((artist) => (
-                <div className="col card-hover-effect">
-                  <ArtistCard key={artist.id} artist={artist} />
+                <div key={artist.id} className="col card-hover-effect">
+                  <ArtistCard artist={artist} />
                 </div>
               ))}
             </div>

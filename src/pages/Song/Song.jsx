@@ -26,7 +26,7 @@ function Song() {
       try {
         const response = await api.get("/songs/");
 
-        setSongs(response.data.results);
+        setSongs(response.data);
       } catch (err) {
         setError(err.message);
       } finally {

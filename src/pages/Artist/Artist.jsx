@@ -26,7 +26,7 @@ function Artist() {
       try {
         const response = await api.get("/artists/");
 
-        setArtists(response.data.results);
+        setArtists(response.data);
       } catch (err) {
         setError(err.message);
       } finally {

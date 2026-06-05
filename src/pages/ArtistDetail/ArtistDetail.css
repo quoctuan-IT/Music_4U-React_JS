@@ -1,0 +1,12 @@
+.active-song {
+    background: rgba(255, 45, 85, 0.15) !important;
+    border-left: 4px solid var(--accent-pink) !important;
+}
+
+.artist-profile-img {
+    transition: transform 0.5s ease;
+}
+
+.artist-profile-img:hover {
+    transform: scale(1.05);
+}

@@ -225,6 +225,7 @@ function SongDetail() {
                       onPause={handlePause}
                       onTimeUpdate={handleTimeUpdate}
                       onLoadedMetadata={handleLoadedMetadata}
+                      autoPlay
                     />
                   </div>
 
