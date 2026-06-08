@@ -1,0 +1,20 @@
+.album-main-img {
+    transition: transform 0.4s ease;
+}
+
+.album-main-img:hover {
+    transform: scale(1.03);
+}
+
+.shadow-pink-glow {
+    box-shadow: 0 10px 40px rgba(255, 45, 85, 0.3) !important;
+}
+
+.active-song {
+    background: rgba(255, 45, 85, 0.15) !important;
+    border-left: 4px solid var(--accent-pink) !important;
+}
+
+.border-dashed {
+    border-style: dashed !important;
+}

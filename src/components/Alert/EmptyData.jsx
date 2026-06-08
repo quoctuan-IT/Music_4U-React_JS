@@ -12,7 +12,7 @@ function EmptyData() {
       <p className="text-secondary mb-4">We couldn't find any data.</p>
 
       <Link to="/" className="btn btn-outline-pink rounded-pill px-4">
-        <i className="bi bi-arrow-left me-2"></i>
+        <i className="bi bi-house-door me-2"></i>
         Home
       </Link>
     </div>

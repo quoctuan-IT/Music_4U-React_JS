@@ -9,7 +9,13 @@ import Footer from "../../components/Footer/Footer.jsx";
 function AuthLayout() {
   return (
     <div className="d-flex align-items-center">
-      <main className="m-auto mt-2">
+      <main
+        className="m-auto mt-2"
+        style={{
+          maxWidth: "400px",
+          width: "100%",
+        }}
+      >
         {/* Child */}
         <Outlet />
 

@@ -1,4 +1,5 @@
 import { Link, NavLink } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 
 // CSS
 import "./Header.css";
@@ -7,11 +8,7 @@ import "./Header.css";
 import reactLogo from "../../assets/react.svg";
 
 function Header() {
-  const isAuthenticated = true;
-
-  const user = {
-    username: "Pham Quoc Tuan",
-  };
+  const { user, isAuthenticated } = useAuth();
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark fixed-top navbar-glass">
@@ -93,7 +90,7 @@ function Header() {
                   data-bs-toggle="dropdown"
                 >
                   <i className="bi bi-person-circle me-1"></i>
-                  {user.username}
+                  {user?.username}
                 </button>
 
                 <ul className="dropdown-menu dropdown-menu-end custom-dropdown bg-dark border-secondary shadow-lg">

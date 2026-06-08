@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
 
 // CSS
-import "./ArtistDetail.css";
+import "./Favorite.css";
 
 // Services
 import api from "../../services/api";
@@ -19,16 +21,19 @@ import EmptyData from "../../components/Alert/EmptyData";
 // Resources
 import reactLogo from "../../assets/react.svg";
 
-function ArtistDetail() {
+function Favorite() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Data
-  const { id } = useParams();
-  const [artist, setArtist] = useState(null);
-  const [songs, setSongs] = useState(null);
-  const isAuthenticated = true;
-  const isFavorite = true;
+  const navigate = useNavigate();
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
+  const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      navigate("/login");
+    }
+  }, [authLoading, isAuthenticated, navigate]);
 
   // Music player
   const audioRef = useRef(null);
@@ -36,16 +41,16 @@ function ArtistDetail() {
   const [hasTrack, setHasTrack] = useState(false);
 
   const playlist = useMemo(() => {
-    if (!songs?.length || !artist) return [];
+    if (!favorites.length) return [];
 
-    return songs.map((song) => ({
+    return favorites.map((song) => ({
       id: song.id,
       title: song.title,
-      artist: song.artist?.name ?? artist.name,
+      artist: song.artist?.name,
       url: song.audio_file,
       cover: song.cover_image || reactLogo,
     }));
-  }, [songs, artist]);
+  }, [favorites]);
 
   const currentTrack = hasTrack ? playlist[currentIndex] : null;
 
@@ -106,7 +111,8 @@ function ArtistDetail() {
   }, [playAllSongs]);
 
   useEffect(() => {
-    // Reset PlayerMusic
+    if (!isAuthenticated) return;
+
     setHasTrack(false);
     setCurrentIndex(0);
 
@@ -117,20 +123,19 @@ function ArtistDetail() {
       audio.load();
     }
 
-    // Reset page State
     setLoading(true);
     setError(null);
 
-    const fetchArtist = async () => {
+    const fetchFavorites = async () => {
       const start = Date.now();
 
       try {
-        const response = await api.get(`/artists/${id}/`);
-
-        setArtist(response.data);
-        setSongs(response.data.songs);
+        const response = await api.get("/favorites/");
+        setFavorites(response.data.results ?? []);
       } catch (err) {
-        setError(err.message);
+        setError(
+          err.response?.data?.error || err.response?.data?.detail || err.message,
+        );
       } finally {
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, 2000 - elapsed);
@@ -141,10 +146,10 @@ function ArtistDetail() {
       }
     };
 
-    fetchArtist();
-  }, [id]);
+    fetchFavorites();
+  }, [isAuthenticated]);
 
-  if (loading) {
+  if (authLoading || loading) {
     return <Loading />;
   }
 
@@ -152,90 +157,107 @@ function ArtistDetail() {
     return <ErrorMessage message={error} />;
   }
 
+  if (!user) {
+    return null;
+  }
+
+  const coverImage = favorites[0]?.cover_image || reactLogo;
+
   return (
     <>
       <SearchCard />
 
       <div
-        className="artist-header position-relative py-4 rounded-2"
+        className="favorites-header position-relative"
         style={{
           background:
             "linear-gradient(180deg, rgba(255,0,155,0.2) 0%, rgba(0,0,0,1) 100%)",
         }}
       >
-        <div className="container py-2">
-          <div className="row align-items-center border-0">
-            <div className="col-md-3 text-center mb-4 mb-md-0">
-              <img
-                src={artist.image}
-                className="rounded-circle shadow-lg border border-3 border-pink img-fluid artist-profile-img"
-                style={{
-                  objectFit: "cover",
-                  width: "220px",
-                  height: "220px",
-                }}
-              />
+        <div className="container py-5 mt-5">
+          <div className="row align-items-end">
+            <div className="col-md-4 col-lg-3 text-center mb-4 mb-md-0">
+              <div className="position-relative d-inline-block shadow-lg rounded-4 overflow-hidden shadow-pink-glow">
+                <img
+                  src={coverImage}
+                  alt="Favorite playlist"
+                  className="img-fluid album-main-img"
+                  style={{
+                    objectFit: "cover",
+                    width: "280px",
+                    aspectRatio: "1/1",
+                  }}
+                />
+              </div>
             </div>
 
-            <div className="col-md-9">
-              <span className="badge btn-pink mb-2">
-                <i className="bi bi-patch-check-fill me-1"></i>Verified Artist
+            <div className="col-md-8 col-lg-9 ps-md-5">
+              <span className="badge btn-pink mb-2 text-uppercase fw-bold p-2 px-3 rounded-pill">
+                Playlist
               </span>
-              <h1 className="display-3 fw-bold text-white mb-3">
-                {artist.name}
+              <h1 className="display-5 fw-bold text-white mb-2 text-uppercase">
+                Favorite
               </h1>
 
-              <div
-                className="artist-bio text-secondary mb-4"
-                style={{
-                  maxWidth: "700px",
-                }}
-              >
-                {artist.bio || "No bio."}
+              <div className="d-flex align-items-center gap-3 mb-4">
+                <div className="d-flex align-items-center text-white">
+                  <i className="bi bi-person-circle fs-5 me-2 text-pink"></i>
+                  <span className="fw-semibold">{user.username}</span>
+                </div>
+                <span className="text-secondary">|</span>
+                <span className="text-secondary fw-bold" id="totalSongs">
+                  {favorites.length} Tracks
+                </span>
               </div>
 
-              <div className="d-flex gap-3">
-                {songs.length > 0 && (
+              <div className="d-flex align-items-center gap-3">
+                {favorites.length > 0 && (
                   <button
                     type="button"
-                    className="btn btn-pink rounded-pill px-3 fw-bold shadow"
+                    className="btn btn-pink rounded-pill px-4 fw-bold shadow d-inline-flex align-items-center justify-content-center"
                     onClick={playAllSongs}
+                    style={{ height: "45px", minWidth: "140px" }}
                   >
-                    <i className="bi bi-play-fill fs-5 me-2"></i>Play All
+                    <i className="bi bi-play-fill fs-4 me-1"></i> Play All
                   </button>
                 )}
+
+                <Link
+                  to="/"
+                  className="btn btn-outline-light rounded-pill px-4 fw-bold d-inline-flex align-items-center justify-content-center"
+                  style={{ height: "45px", minWidth: "140px" }}
+                >
+                  <i className="bi bi-plus-lg me-2"></i> More
+                </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {songs.length > 0 ? (
-        <div className="container pb-5">
+      <div className="container pb-5">
+        {favorites.length > 0 ? (
           <div className="row g-4">
-            {/* Tracklist */}
             <div className="col-lg-8">
-              <div className="d-flex align-items-center justify-content-between mb-4">
-                <h4 className="text-white mb-0 fw-bold">Popular Tracks</h4>
-                <span className="text-secondary small">
-                  {songs.length} Songs
-                </span>
-              </div>
+              <h4 className="text-white mb-4 fw-bold">
+                <i className="bi bi-heart-pulse text-pink me-2"></i>Your
+                Collection
+              </h4>
 
-              <div className="song-list-container rounded-4 overflow-hidden border border-secondary border-opacity-25 shadow-sm">
-                {songs.map((song, index) => (
+              <div className="song-list-container list-group list-group-flush rounded-4 overflow-hidden border border-secondary border-opacity-25 shadow-sm">
+                {favorites.map((song, index) => (
                   <SongList
                     key={song.id}
                     song={song}
                     index={index}
                     isActive={hasTrack && currentIndex === index}
                     onPlay={playSong}
+                    initialIsFavorite={true}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Floating Player */}
             <div className="col-lg-4">
               <div className="sticky-top" style={{ top: "100px" }}>
                 <MusicPlayer
@@ -249,13 +271,12 @@ function ArtistDetail() {
               </div>
             </div>
           </div>
-        </div>
-      ) : (
-        /* Empty State */
-        <EmptyData />
-      )}
+        ) : (
+          <EmptyData />
+        )}
+      </div>
     </>
   );
 }
 
-export default ArtistDetail;
+export default Favorite;

@@ -1,0 +1,12 @@
+.shadow-pink-glow {
+    box-shadow: 0 10px 40px rgba(255, 45, 85, 0.3) !important;
+}
+
+.active-song {
+    background: rgba(255, 45, 85, 0.15) !important;
+    border-left: 4px solid var(--accent-pink) !important;
+}
+
+.border-dashed {
+    border-style: dashed !important;
+}

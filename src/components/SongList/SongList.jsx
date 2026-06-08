@@ -3,9 +3,17 @@ import { Link } from "react-router-dom";
 // CSS
 import "./SongList.css";
 
-function SongList({ song, index, isActive, onPlay }) {
-  const isFavorite = true;
+// Components
+import FavoriteButton from "../FavoriteButton/FavoriteButton";
 
+function SongList({
+  song,
+  index,
+  isActive,
+  onPlay,
+  onRemove,
+  initialIsFavorite,
+}) {
   return (
     <div
       className={`list-group-item song-item bg-dark border-0 border-bottom border-secondary border-opacity-10 py-2 py-md-3 px-3 px-md-4 transition-base${isActive ? " active-song" : ""}`}
@@ -63,30 +71,34 @@ function SongList({ song, index, isActive, onPlay }) {
 
         <div className="col-auto">
           <div className="d-flex align-items-center gap-2 gap-md-4">
-            <button
-              type="button"
+            <FavoriteButton
+              songId={song.id}
+              song={song}
+              initialIsFavorite={initialIsFavorite}
               className="btn btn-link text-secondary p-1 btn-favorite shadow-none"
-              data-song-id={song.id}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-            >
-              <i
-                className={
-                  isFavorite
-                    ? "bi bi-heart-fill text-danger"
-                    : "bi bi-heart text-pink"
-                }
-              ></i>
-            </button>
+              stopPropagation
+            />
 
             <Link
-              to={`/songs/${song.id}`}
+              to={`/song/${song.id}`}
               className="btn btn-link text-info p-1 d-md-inline-block shadow-none"
               onClick={(e) => e.stopPropagation()}
             >
               <i className="bi bi-info-circle hover-white scale-up"></i>
             </Link>
+
+            {onRemove && (
+              <button
+                type="button"
+                className="btn btn-link text-danger p-1 shadow-none"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove();
+                }}
+              >
+                <i className="bi bi-trash scale-up"></i>
+              </button>
+            )}
           </div>
         </div>
       </div>

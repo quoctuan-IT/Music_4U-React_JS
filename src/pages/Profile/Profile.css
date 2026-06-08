@@ -33,7 +33,7 @@
 
 @media (max-width: 767px) {
     .border-end {
-        border-end: none !important;
+        border-right: none !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
         padding-bottom: 20px;
         margin-bottom: 10px;

@@ -1,0 +1,44 @@
+.song-selector-container input[type="text"],
+.song-selector-container .form-control {
+  background-color: #000 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+  padding: 12px;
+  transition: all 0.3s ease;
+}
+
+.song-selector-container .form-check-input {
+  background-color: #1a1a1a;
+  border-color: #ff2d55;
+  cursor: pointer;
+}
+
+.song-selector-container .form-check-input:checked {
+  background-color: #ff2d55;
+  border-color: #ff2d55;
+}
+
+.custom-checkbox:hover {
+  background: rgba(255, 45, 85, 0.05);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.song-selector-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.song-selector-container::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+.song-selector-container::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-pink);
+}
+
+.shadow-pink-glow {
+  box-shadow: 0 10px 40px rgba(255, 45, 85, 0.15) !important;
+}

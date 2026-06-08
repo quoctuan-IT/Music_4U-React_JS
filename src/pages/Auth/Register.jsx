@@ -1,11 +1,58 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
+import { useAuth } from "../../context/AuthContext";
 
 // Resources
 import reactLogo from "../../assets/react.svg";
 
+function getErrorMessage(err) {
+  const data = err.response?.data;
+  if (!data) return err.message || "Registration failed. Please try again.";
+
+  if (typeof data === "string") return data;
+  if (data.error) return data.error;
+  if (data.detail) return data.detail;
+  if (data.non_field_errors?.[0]) return data.non_field_errors[0];
+
+  const firstKey = Object.keys(data)[0];
+  const firstValue = data[firstKey];
+  if (Array.isArray(firstValue)) return firstValue[0];
+  if (typeof firstValue === "string") return firstValue;
+
+  return "Registration failed. Please try again.";
+}
+
 function Register() {
+  const { register } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    if (password !== password2) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await register({ username, password, password2 });
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <img
         src={reactLogo}
         alt="React logo"
@@ -16,17 +63,29 @@ function Register() {
 
       <h1 className="h3 mb-3">REGISTER</h1>
 
+      {error && (
+        <div
+          className="alert alert-danger py-2"
+          style={{
+            overflowWrap: "break-word",
+            wordBreak: "break-word",
+          }}
+        >
+          {error}
+        </div>
+      )}
+
       <div className="form-floating mb-3">
         <input
           autoFocus
           type="text"
           className="form-control"
           name="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           required
         />
         <label className="form-label">Username</label>
-
-        <div className="text-danger mt-1">Errors</div>
       </div>
 
       <div className="form-floating mb-3">
@@ -34,12 +93,25 @@ function Register() {
           type="password"
           className="form-control"
           name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           required
         />
 
         <label className="form-label">Password</label>
+      </div>
 
-        <div className="text-danger mt-1">Errors</div>
+      <div className="form-floating mb-3">
+        <input
+          type="password"
+          className="form-control"
+          name="password2"
+          value={password2}
+          onChange={(e) => setPassword2(e.target.value)}
+          required
+        />
+
+        <label className="form-label">Confirm Password</label>
       </div>
 
       <p className="mt-3 text-center">
@@ -49,8 +121,16 @@ function Register() {
         </Link>
       </p>
 
-      <button className="btn btn-info text-black fw-bold w-100 py-2 ">
-        REGISTER
+      <button
+        type="submit"
+        className="btn btn-info text-black fw-bold w-100 py-2 "
+        disabled={submitting}
+      >
+        {submitting ? (
+          <i className="bi bi-hourglass-bottom display-6"></i>
+        ) : (
+          "REGISTER"
+        )}
       </button>
     </form>
   );

@@ -9,9 +9,13 @@ import api from "../../services/api";
 
 // Components
 import SearchCard from "../../components/SearchCard/SearchCard";
+import FavoriteButton from "../../components/FavoriteButton/FavoriteButton";
 
 import Loading from "../../components/Alert/Loading";
 import ErrorMessage from "../../components/Alert/ErrorMessage";
+
+import { useAuth } from "../../context/AuthContext";
+import { useMessage } from "../../context/MessageContext";
 
 function SongDetail() {
   const [loading, setLoading] = useState(true);
@@ -20,8 +24,11 @@ function SongDetail() {
   // Data
   const { id } = useParams();
   const [song, setSong] = useState(null);
-  const isAuthenticated = true;
-  const isFavorite = true;
+  const { isAuthenticated } = useAuth();
+  const { showSuccess, showError, showWarning } = useMessage();
+
+  const [selectedAlbumId, setSelectedAlbumId] = useState("");
+  const [addingToAlbum, setAddingToAlbum] = useState(false);
 
   // Music
   const [isPlaying, setIsPlaying] = useState(false);
@@ -114,6 +121,39 @@ function SongDetail() {
     const value = e.target.value;
 
     audio.currentTime = (value / 100) * duration;
+  };
+
+  const userAlbums = song.user_albums ?? [];
+
+  const handleAddToAlbum = async (e) => {
+    e.preventDefault();
+
+    if (!selectedAlbumId) return;
+
+    setAddingToAlbum(true);
+
+    try {
+      const response = await api.post(
+        `/albums/${selectedAlbumId}/songs/${song.id}/`
+      );
+
+      if (response.data.already_in_album) {
+        showWarning(response.data.message);
+      } else {
+        showSuccess(response.data.message);
+      }
+
+      setSelectedAlbumId("");
+    } catch (err) {
+      showError(
+        err.response?.data?.error ||
+          err.response?.data?.message ||
+          err.response?.data?.detail ||
+          err.message,
+      );
+    } finally {
+      setAddingToAlbum(false);
+    }
   };
 
   return (
@@ -231,17 +271,12 @@ function SongDetail() {
 
                   <div className="d-flex align-items-center gap-3">
                     {isAuthenticated && (
-                      <button
+                      <FavoriteButton
+                        songId={song.id}
+                        song={song}
                         className="btn btn-favorite border border-secondary rounded-circle d-flex align-items-center justify-content-center"
-                        data-song-id={song.id}
                         style={{ width: "40px", height: "40px" }}
-                      >
-                        {isFavorite ? (
-                          <i className="bi bi-heart-fill text-danger"></i>
-                        ) : (
-                          <i className="bi bi-heart text-pink"></i>
-                        )}
-                      </button>
+                      />
                     )}
 
                     <div className="text-secondary small">
@@ -265,21 +300,41 @@ function SongDetail() {
                       Save to Album
                     </h5>
 
-                    <form>
+                    <form onSubmit={handleAddToAlbum}>
                       <div className="input-group">
                         <select
-                          defaultValue=""
+                          value={selectedAlbumId}
+                          onChange={(e) => setSelectedAlbumId(e.target.value)}
                           className="form-select bg-black text-white border-secondary custom-focus rounded-start-pill"
                           required
+                          disabled={userAlbums.length === 0 || addingToAlbum}
                         >
                           <option value="" disabled>
                             Choose an album
                           </option>
 
-                          <option disabled>No albums found</option>
+                          {userAlbums.length > 0 ? (
+                            userAlbums.map((album) => (
+                              <option key={album.id} value={album.id}>
+                                {album.name}
+                              </option>
+                            ))
+                          ) : (
+                            <option value="" disabled>
+                              No albums found
+                            </option>
+                          )}
                         </select>
 
-                        <button className="btn btn-pink rounded-end-pill px-4">
+                        <button
+                          type="submit"
+                          className="btn btn-pink rounded-end-pill px-4"
+                          disabled={
+                            !selectedAlbumId ||
+                            userAlbums.length === 0 ||
+                            addingToAlbum
+                          }
+                        >
                           <i className="bi bi-plus-square-dotted"></i>
                         </button>
                       </div>

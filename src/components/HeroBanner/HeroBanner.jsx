@@ -24,7 +24,7 @@ function HeroBanner() {
 
             <div className="d-flex gap-3 justify-content-center justify-content-lg-start">
               <Link
-                to="/song"
+                to="/songs"
                 className="btn btn-pink rounded-pill px-3 py-3 fw-bold shadow d-inline-flex align-items-center justify-content-center"
                 style={{
                   height: "45px",
@@ -36,7 +36,7 @@ function HeroBanner() {
               </Link>
 
               <Link
-                to="/artist"
+                to="/artists"
                 className="btn btn-outline-light rounded-pill px-3 py-3 fw-bold d-inline-flex align-items-center justify-content-center"
                 style={{
                   height: "45px",
