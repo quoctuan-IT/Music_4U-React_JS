@@ -70,7 +70,7 @@ api.interceptors.response.use(
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/refresh/",
+        "https://phamquoctuan041203.pythonanywhere.com/api/auth/refresh/",
         { refresh },
       );
       const newAccess = response.data.access;
